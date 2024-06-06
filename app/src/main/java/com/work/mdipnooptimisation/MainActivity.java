@@ -2,32 +2,17 @@ package com.work.mdipnooptimisation;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.ConfigurationInfo;
 import android.opengl.GLSurfaceView;
-import android.os.Bundle;
 import android.util.Log;
-
-import androidx.annotation.Nullable;
 
 
 public class MainActivity extends Activity {
 
 
-//    @Override
-//    protected void onCreate(@Nullable Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//
-//
-//         setContentView(R.layout.activity_main);
-//
-//
-//    }
-
-
-    private final int CONTEXT_CLIENT_VERSION = 3;
+    private final int CONTEXT_CLIENT_VERSION = 2;
 
    @Override
    protected void onCreate ( Bundle savedInstanceState )
@@ -35,10 +20,8 @@ public class MainActivity extends Activity {
       super.onCreate ( savedInstanceState );
       mGLSurfaceView = new GLSurfaceView ( this );
 
-      if ( detectOpenGLES30() )
+      if ( detectOpenGLES20() )
       {
-         // Tell the surface view we want to create an OpenGL ES 3.0-compatible
-         // context, and set an OpenGL ES 3.0-compatible renderer.
          mGLSurfaceView.setEGLContextClientVersion ( CONTEXT_CLIENT_VERSION );
          mGLSurfaceView.setRenderer ( new SimpleVertexShaderRenderer ( this ) );
       }
@@ -52,19 +35,17 @@ public class MainActivity extends Activity {
       setContentView ( mGLSurfaceView );
    }
 
-   private boolean detectOpenGLES30()
+   private boolean detectOpenGLES20()
    {
       ActivityManager am =
          ( ActivityManager ) getSystemService ( Context.ACTIVITY_SERVICE );
       ConfigurationInfo info = am.getDeviceConfigurationInfo();
-      return ( info.reqGlEsVersion >= 0x30000 );
+      return ( info.reqGlEsVersion >= 0x20000 );
    }
 
    @Override
    protected void onResume()
    {
-      // Ideally a game should implement onResume() and onPause()
-      // to take appropriate action when the activity looses focus
       super.onResume();
       mGLSurfaceView.onResume();
    }
@@ -72,8 +53,6 @@ public class MainActivity extends Activity {
    @Override
    protected void onPause()
    {
-      // Ideally a game should implement onResume() and onPause()
-      // to take appropriate action when the activity looses focus
       super.onPause();
       mGLSurfaceView.onPause();
    }
