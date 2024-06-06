@@ -18,7 +18,9 @@ public class MainActivity extends Activity {
    protected void onCreate ( Bundle savedInstanceState )
    {
       super.onCreate ( savedInstanceState );
-      mGLSurfaceView = new GLSurfaceView ( this );
+
+      setContentView(R.layout.activity_main);
+      mGLSurfaceView =   findViewById(R.id.surface_view); //new GLSurfaceView ( this );
 
       if ( detectOpenGLES20() )
       {
@@ -32,7 +34,7 @@ public class MainActivity extends Activity {
 
       }
 
-      setContentView ( mGLSurfaceView );
+      //setContentView ( mGLSurfaceView );
    }
 
    private boolean detectOpenGLES20()

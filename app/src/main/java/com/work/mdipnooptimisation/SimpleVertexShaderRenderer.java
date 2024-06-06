@@ -1,27 +1,38 @@
 package com.work.mdipnooptimisation;
 
 import static android.opengl.GLES20.GL_SHADING_LANGUAGE_VERSION;
+import static android.opengl.GLES20.GL_TEXTURE0;
+import static android.opengl.GLES20.GL_TEXTURE_2D;
+import static android.opengl.GLES20.glActiveTexture;
 import static android.opengl.GLES20.glGetString;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+import android.opengl.GLUtils;
 import android.os.SystemClock;
 import android.util.Log;
+
+import java.io.IOException;
 
 
 public class SimpleVertexShaderRenderer implements GLSurfaceView.Renderer
 {
 
+
+   int[] textureIds = new int[1];
+   private Context mainContext;
    ///
    // Constructor
    //
    public SimpleVertexShaderRenderer ( Context context )
    {
-
+       mainContext = context;
    }
 
    public void onSurfaceCreated ( GL10 glUnused, EGLConfig config )
@@ -48,18 +59,53 @@ public class SimpleVertexShaderRenderer implements GLSurfaceView.Renderer
          "precision mediump float;                    \n" +
          "in vec4 v_color;                            \n" +
          "layout(location = 0) out vec4 outColor;     \n" +
+         "uniform sampler2D sampL;                    \n" +
          "void main()                                 \n" +
          "{                                           \n" +
-         "  outColor = v_color;                       \n" +
+         "  ///outColor = v_color;                    \n" +
+         "  outColor = texture(sampL, v_color.xy); \n" +
          "}                                           \n";
 
       mProgramObject = ESShader.loadProgram ( vShaderStr, fShaderStr );
 
       mMVPLoc = GLES20.glGetUniformLocation ( mProgramObject, "u_mvpMatrix" );
 
-      mCube.genCube ( 1.0f );
+      samplerOur = GLES20.glGetUniformLocation(mProgramObject, "sampL");
+
+
+
+        mCube.genCube ( 1.0f ); // mCube.getSphere()
+       //mCube.genSphere(3, 3);
 
       mAngle = 45.0f;
+
+      // load texture
+
+      final BitmapFactory.Options options = new BitmapFactory.Options();
+      options.inScaled = false;
+
+      final Bitmap bitmap = BitmapFactory.decodeResource(
+          mainContext.getResources(), R.drawable.dwall, options);
+
+
+      GLES20.glActiveTexture(GL_TEXTURE0);
+
+
+
+       GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureIds[0]);
+
+      GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+      GLES20.glEnable(GLES20.GL_BLEND);
+
+
+      GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
+      GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+
+
+      GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
+      bitmap.recycle();
+
+      GLES20.glBindTexture(GL_TEXTURE_2D, 0);
 
       GLES20.glClearColor ( 1.0f, 1.0f, 1.0f, 0.0f );
    }
@@ -109,15 +155,27 @@ public class SimpleVertexShaderRenderer implements GLSurfaceView.Renderer
 
       GLES20.glUseProgram ( mProgramObject );
 
+     GLES20.glActiveTexture(GL_TEXTURE0);
+     GLES20.glBindTexture(GL_TEXTURE_2D, textureIds[0]);
+
+
      // half_float  GLES20.GL_UNSIGNED_SHORT
       GLES20.glVertexAttribPointer ( 0, 3, GLES20.GL_FLOAT, false,
                                      0, mCube.getVertices() );
       GLES20.glEnableVertexAttribArray ( 0 );
 
-      GLES20.glVertexAttrib4f ( 1, 1.0f, 0.0f, 0.0f, 1.0f );
+      GLES20.glVertexAttribPointer(1, 3, GLES20.GL_FLOAT, false,
+              0, mCube.getTexCoords() );
+
+          GLES20.glEnableVertexAttribArray ( 1);
+     // GLES20.glVertexAttrib4f ( 1, 1.0f, 0.0f, 0.0f, 1.0f );
 
       GLES20.glUniformMatrix4fv ( mMVPLoc, 1, false,
                                   mMVPMatrix.getAsFloatBuffer() );
+
+
+
+
 
       GLES20.glDrawElements ( GLES20.GL_TRIANGLES, mCube.getNumIndices(),
                               GLES20.GL_UNSIGNED_SHORT, mCube.getIndices() );
@@ -133,6 +191,7 @@ public class SimpleVertexShaderRenderer implements GLSurfaceView.Renderer
    private int mProgramObject;
 
    private int mMVPLoc;
+   private int samplerOur;
    private ESShapes mCube = new ESShapes();
    private float mAngle;
    private ESTransform mMVPMatrix = new ESTransform();
