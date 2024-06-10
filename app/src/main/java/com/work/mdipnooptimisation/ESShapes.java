@@ -9,6 +9,90 @@ import java.nio.ShortBuffer;
 public class ESShapes
 {
 
+
+   public int getPyramid(){
+
+
+      int arrayCount = 0;
+
+
+      float[] pyramidVerts = {
+                              0.0f, 0.8f, 0.0f,
+                              -0.3f, -0.5f, -0.3f,
+                              0.3f, -0.5f, -0.3f,
+
+                             0.0f, 0.8f, 0.0f,
+                            -0.3f, -0.5f, 0.3f,
+                             0.3f, -0.5f, 0.3f,
+
+                            0.0f, 0.8f, 0.0f,
+                            0.3f, -0.5f, 0.3f,
+                            0.3f, -0.5f, -0.3f,
+
+                             0.0f, 0.8f, 0.0f,
+                            -0.3f, -0.5f, 0.3f,
+                            -0.3f, -0.5f, -0.3f,
+
+                            -0.3f, -0.5f, 0.3f,
+                            -0.3f, -0.5f, -0.3f,
+                             0.3f, -0.5f,  0.3f,
+
+                            -0.3f, -0.5f, 0.3f,
+                             0.3f, -0.5f, -0.3f,
+                             0.3f, -0.5f,  0.3f,
+
+                          };
+
+
+
+      //    0, 2, 1, 0, 3, 2,
+      float[] pyramidTex = {
+
+              0.0f, 0.01f,    // 0
+              0.0f, 0.33f,   // 1
+              0.35f, 0.33f,   // 2
+              // 0.35f, 0.33f,   // 3
+              //0.35f, 0.01f,   // 4
+              // 0.0f, 0.01f,    // 5
+              // 0.3f, 0.0f
+              0.0f, 0.01f,    // 0
+              0.0f, 0.33f,   // 1
+              0.35f, 0.33f,
+              0.0f, 0.01f,    // 0
+              0.0f, 0.33f,   // 1
+              0.35f, 0.33f,
+
+              0.0f, 0.01f,    // 0
+              0.0f, 0.33f,   // 1
+              0.35f, 0.33f,
+
+              0.0f, 0.01f,    // 0
+              0.0f, 0.33f,   // 1
+              0.35f, 0.33f,
+
+              0.0f, 0.01f,    // 0
+              0.0f, 0.33f,   // 1
+              0.35f, 0.33f,
+      };
+
+
+       mVerticesPyramid = ByteBuffer.allocateDirect ( 18 * 3 * 4 )
+                  .order ( ByteOrder.nativeOrder() ).asFloatBuffer();
+
+      mTexCoordsPyramid = ByteBuffer.allocateDirect ( 18 * 2 * 4 )
+                   .order ( ByteOrder.nativeOrder() ).asFloatBuffer();
+//      mIndices = ByteBuffer.allocateDirect ( numIndices * 2 )
+//                 .order ( ByteOrder.nativeOrder() ).asShortBuffer();
+
+      mVerticesPyramid.put ( pyramidVerts ).position ( 0 );
+      mTexCoordsPyramid.put ( pyramidTex ).position ( 0 );
+
+
+
+      return arrayCount;
+   }
+
+
    public int genSphere ( int numSlices, float radius )
    {
       int i;
@@ -89,9 +173,13 @@ public class ESShapes
       int numVertices = 24;
       int numIndices = 36;
 
-      float[] cubeVerts = { -0.5f, -0.5f, -0.5f, -0.5f, -0.5f, 0.5f, 0.5f,
-                            -0.5f, 0.5f, 0.5f, -0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f,
-                            0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, -0.5f, -0.5f,
+      float[] cubeVerts = { -0.5f, -0.5f, -0.5f,
+                            -0.5f, -0.5f,  0.5f,
+                             0.5f, -0.5f,  0.5f,
+                             0.5f, -0.5f, -0.5f,
+                            -0.5f,  0.5f, -0.5f,
+                            -0.5f,  0.5f,  0.5f,
+                             0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, -0.5f, -0.5f,
                             -0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f, -0.5f,
                             -0.5f, -0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f,
                             0.5f, -0.5f, 0.5f, -0.5f, -0.5f, -0.5f, -0.5f, -0.5f, 0.5f,
@@ -109,12 +197,88 @@ public class ESShapes
                               0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
                             };
 
-      float[] cubeTex = { 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
-                          1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-                          0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-                          1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-                          1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
-                        };
+
+      //    0, 2, 1, 0, 3, 2,
+      float[] cubeTex = {
+
+                          0.0f, 0.01f,    // 0
+                          0.0f, 0.33f,   // 1
+                          0.35f, 0.33f,   // 2
+                         // 0.35f, 0.33f,   // 3
+                          0.35f, 0.01f,   // 4
+                         // 0.0f, 0.01f,    // 5
+                         // 0.3f, 0.0f
+
+
+              // 4, 5, 6, 4, 6, 7,
+                          0.69f, 0.33f,  // 4
+                          1.0f, 0.33f,   // 5
+                          1.0f, 0.6f,    // 6
+                          0.69f, 0.6f,   // 7
+                          //0.69f, 0.6f,
+
+                          //1.0f, 0.33f,
+
+
+              // 8, 9, 10, 8, 10, 11,
+
+                          0.69f, 0.01f,  // 8
+                          1.0f, 0.01f,   // 9
+                           1.0f, 0.33f,  // 10
+                          0.69f, 0.33f,   // 11
+
+
+             //    12, 15, 14, 12, 14, 13,
+
+                          0.0f, 0.33f,    // 12
+                          0.0f, 0.6f,     // 13
+                          0.35f, 0.6f,    // 14
+                          0.35f, 0.33f,   // 15
+
+
+
+              //    16, 17, 18, 16, 18, 19,
+                          0.36f, 0.33f,  // 16
+                          0.68f, 0.33f,  // 17
+                          0.68f, 0.6f,   // 18
+                          0.36f, 0.6f, // 19
+
+
+
+                          0.36f, 0.01f,  // 20
+                          0.68f, 0.01f,  // 21
+                          0.68f, 0.33f,  // 22
+                          0.36f, 0.33f, // 23
+
+
+
+      };
+
+//      float[] cubeTex = { 0.0f, 0.0f,
+//                          0.0f, 1.0f,
+//                          1.0f, 1.0f,
+//                          1.0f, 0.0f,
+//                          1.0f, 0.0f,
+//                          1.0f, 1.0f,
+//                          0.0f, 1.0f,
+//                          0.0f, 0.0f,
+//                          0.0f, 0.0f, // 10
+//                          0.0f, 1.0f,
+//                          1.0f, 1.0f,
+//                          1.0f, 0.0f,
+//                          0.0f, 0.0f,
+//                          0.0f, 1.0f,
+//                          1.0f, 1.0f,
+//                          1.0f, 0.0f,
+//                          0.0f, 0.0f,
+//                          0.0f, 1.0f,
+//                          1.0f, 1.0f,  // 20
+//                          1.0f, 0.0f,
+//                          0.0f, 0.0f,
+//                          0.0f, 1.0f,
+//                          1.0f, 1.0f,
+//                          1.0f, 0.0f,
+//                        };
 
       // Allocate memory for buffers
       mVertices = ByteBuffer.allocateDirect ( numVertices * 3 * 4 )
@@ -136,9 +300,12 @@ public class ESShapes
       mNormals.put ( cubeNormals ).position ( 0 );
       mTexCoords.put ( cubeTex ).position ( 0 );
 
-      short[] cubeIndices = { 0, 2, 1, 0, 3, 2, 4, 5, 6, 4, 6, 7, 8, 9, 10,
-                              8, 10, 11, 12, 15, 14, 12, 14, 13, 16, 17, 18, 16, 18, 19, 20,
-                              23, 22, 20, 22, 21
+      short[] cubeIndices = { 0, 2, 1, 0, 3, 2,
+                              4, 5, 6, 4, 6, 7,
+                              8, 9, 10, 8, 10, 11,
+                             12, 15, 14, 12, 14, 13,
+                             16, 17, 18, 16, 18, 19,
+                             20, 23, 22, 20, 22, 21
                             };
 
       mIndices.put ( cubeIndices ).position ( 0 );
@@ -171,10 +338,23 @@ public class ESShapes
       return mNumIndices;
    }
 
+
+   public FloatBuffer getmVerticesPyramid() {
+      return mVerticesPyramid;
+   }
+
+   public FloatBuffer getmTexCoordsPyramid() {
+      return mTexCoordsPyramid;
+   }
+
    // Member variables
    private FloatBuffer mVertices;
    private FloatBuffer mNormals;
    private FloatBuffer mTexCoords;
    private ShortBuffer mIndices;
+
+   private FloatBuffer  mVerticesPyramid;
+   private FloatBuffer  mTexCoordsPyramid;
+
    private int mNumIndices;
 }
